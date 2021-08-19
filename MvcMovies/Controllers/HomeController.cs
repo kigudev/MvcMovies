@@ -18,7 +18,6 @@ namespace MvcMovies.Controllers
             _logger = logger;
         }
 
-        [HttpPost]
         public IActionResult Index()
         {
             return View();
