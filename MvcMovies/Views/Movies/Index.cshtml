@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MvcMovies.Models.Movie>
+﻿@model MovieGenreViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -12,7 +12,18 @@
 @*el form se puede quedar sin helpers de asp y método get ya que por default enviará el formulario por get y a la misma página*@
 <form asp-action="Index" asp-controller="Movies" method="get">
     <p>
-        Title: <input type="text" name="search"/>
+        <select asp-for="Genre" asp-items="Model.Genres">
+            <option value="">All</option>
+        </select>
+        Title: <input asp-for="Search" />
+        Rating:
+        @foreach(var rating in Model.Ratings)
+        {
+        <label>
+            <input name="SelectedRatings" type="checkbox" value="@rating" @(Model.SelectedRatings.Contains(rating) ? "checked" : "") />
+            @rating
+        </label>
+        }
         <button type="submit">Search</button>
     </p>
 </form>
@@ -20,22 +31,26 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
+                @Html.DisplayNameFor(model => model.Movies[0].Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ReleaseDate)
+                @Html.DisplayNameFor(model => model.Movies[0].ReleaseDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Genre)
+                @Html.DisplayNameFor(model => model.Movies[0].Genre)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Price)
+                @Html.DisplayNameFor(model => model.Movies[0].Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Movies[0].Rating)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+        @foreach (var item in Model.Movies)
+        {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
@@ -50,11 +65,14 @@
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Rating)
+            </td>
+            <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
-}
+        }
     </tbody>
 </table>
