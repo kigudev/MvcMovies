@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MvcMovies.Areas.Admin.Controllers
 {
-    [Area("admin")]
+    [Area("Admin")]
     public class TheatersController : Controller
     {
         public string Index()

@@ -20,9 +20,20 @@ namespace MvcMovies.Controllers
         }
 
         // GET: Movies
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string search)
         {
-            return View(await _context.Movie.ToListAsync());
+            var movies = _context.Movie.AsQueryable();
+
+            if (!string.IsNullOrEmpty(search))
+                movies = movies.Where(c => c.Title.Contains(search));
+
+            return View(await movies.ToListAsync());
+        }
+
+        [HttpPost]
+        public string Index(string search, bool _)
+        {
+            return $"buscaste {search}";
         }
 
         // GET: Movies/Details/5
@@ -54,7 +65,7 @@ namespace MvcMovies.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([FromBody] Movie movie)
+        public async Task<IActionResult> Create(Movie movie)
         {
             if (ModelState.IsValid)
             {

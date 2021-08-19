@@ -9,6 +9,13 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+@*el form se puede quedar sin helpers de asp y método get ya que por default enviará el formulario por get y a la misma página*@
+<form asp-action="Index" asp-controller="Movies" method="get">
+    <p>
+        Title: <input type="text" name="search"/>
+        <button type="submit">Search</button>
+    </p>
+</form>
 <table class="table">
     <thead>
         <tr>
