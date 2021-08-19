@@ -1,0 +1,8 @@
+﻿<p>Name: @ViewData["Name"]</p>
+<p>Id: @ViewData["Id"]</p>
+
+
+@for (int i = 0; i < (int) ViewData["Id"]; i++)
+{
+    <div>@ViewData["Name"]</div>
+}
