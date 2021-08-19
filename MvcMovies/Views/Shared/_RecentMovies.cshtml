@@ -1,0 +1,19 @@
+﻿@model List<Movie>
+<div>
+    <h4>Recent movies</h4>
+    @if (Model!= null && Model.Any())
+    {
+        foreach (var m in Model)
+        {
+            <div class="card card-body mb-2">
+                <div class="text-muted">@m.ReleaseDate.ToShortDateString()</div>
+                <b>@m.Title</b>
+                <div>@m.Rating</div>
+            </div>
+        }
+    }
+    else
+    {
+        <p class="text-center">No hay peliculas recientes</p>
+    }
+</div>

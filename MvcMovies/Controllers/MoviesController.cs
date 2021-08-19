@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,7 @@ namespace MvcMovies.Controllers
             var movieGenres = _context.Movie.Select(c => c.Genre).Distinct();
             var movieRatings = _context.Movie.Select(c => c.Rating).Distinct();
             var movies = _context.Movie.AsQueryable();
+            var recentMovies = _context.Movie.OrderByDescending(c => c.ReleaseDate).Take(5);
 
             if (!string.IsNullOrEmpty(search))
                 movies = movies.Where(c => c.Title.Contains(search));
@@ -39,7 +41,8 @@ namespace MvcMovies.Controllers
                 Movies = await movies.ToListAsync(),
                 Genres = new SelectList(await movieGenres.ToListAsync()),
                 Ratings = await movieRatings.ToListAsync(),
-                SelectedRatings = selectedRatings
+                SelectedRatings = selectedRatings,
+                RecentMovies = await recentMovies.ToListAsync()
             };
 
             return View(vm);
@@ -169,6 +172,13 @@ namespace MvcMovies.Controllers
             _context.Movie.Remove(movie);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        // cuando queremos regresar una vista parcial por Ajax o petición
+        public IActionResult Recent()
+        {
+            var recentMovies = _context.Movie.OrderByDescending(c => c.ReleaseDate).Take(5).ToList();
+            return PartialView("_RecentMovies", recentMovies);
         }
 
         private bool MovieExists(int id)

@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MvcMovies.Data;
 using MvcMovies.Models;
 using System;
 using System.Collections.Generic;
@@ -12,15 +14,18 @@ namespace MvcMovies.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly MvcMoviesContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, MvcMoviesContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
         {
-            return View();
+            List<Movie> movies = _context.Movie.OrderByDescending(c => c.ReleaseDate).Take(5).ToList();
+            return View(movies);
         }
 
         public IActionResult Privacy()
